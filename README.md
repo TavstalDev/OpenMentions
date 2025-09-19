@@ -8,7 +8,7 @@
 
 ## Description
 
-**OpenMentions** is a Bukkit/Spigot plugin that notifies players when they are mentioned in chat. 
+**OpenMentions** is a Paper plugin that notifies players when they are mentioned in chat. 
 It supports customizable notification formats, sounds, and preferences, making it easy for players to manage how they receive mention alerts.
 
 ## Features
@@ -36,6 +36,8 @@ It supports customizable notification formats, sounds, and preferences, making i
     - `/mentions sound <sound>` — Set your mention sound
     - `/mentions display <type>` — Set your mention display type
     - `/mentions preference <type>` — Set your mention preference
+    - `/mentions igonre <player>` — Ignore mentions from a player
+    - `/mentions unignore <player>` — Unignore mentions from a player
 
 Tab completion is supported for all subcommands and options.
 
