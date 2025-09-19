@@ -34,10 +34,6 @@ public class OMConfig extends ConfigurationBase {
         debug = resolveGet("debug", false);
         resolve("prefix", "&3Open&bMentions &8»");
 
-        // Dates
-        resolve("dates.daily-refresh", LocalDate.now().plusDays(1).atStartOfDay().toString());
-        resolve("dates.weekly-refresh", LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.MONDAY)).atStartOfDay().toString());
-
         // Storage
         storageType = resolveGet("storage.type", "sqlite");
         storageFilename = resolveGet("storage.filename", "database");
