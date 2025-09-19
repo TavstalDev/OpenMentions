@@ -43,5 +43,19 @@ Commands:
     Usage: "%prefix% &aHasználat: &e/mentions preference [érték]"
     Invalid: "%prefix% &cA(z) &e%value%&c preferenciabeállítás érvénytelen."
     Set: "%prefix% &aAz említés preferenciáját beállítottad erre: &e%value%&a."
+  Ignore:
+    Desc: "Egy játékos figyelmen kívül hagyása."
+    Syntax: " [játékos]"
+    Usage: "%prefix% &aHasználat: &e/mentions ignore [játékos]"
+    Enabled: "%prefix% &aMostantól figyelmen kívül hagyod &e%player%&a említéseit."
+    AlreadyEnabled: "%prefix% &cMár figyelmen kívül hagyod &e%player%&c említéseit."
+    Self: "%prefix% &cNem hagyhatod figyelmen kívül saját magad említéseit."
+  Unignore:
+    Desc: "Egy játékos figyelmen kívül hagyásának megszüntetése."
+    Syntax: " [játékos]"
+    Usage: "%prefix% &aHasználat: &e/mentions unignore [játékos]"
+    Disabled: "%prefix% &aMár nem hagyod figyelmen kívül &e%player%&a említéseit."
+    AlreadyDisabled: "%prefix% &cNem hagyod figyelmen kívül &e%player%&c említéseit."
+    Self: "%prefix% &cNem hagyhatod figyelmen kívül saját magad említéseit."
 
 FileVersion: 1

@@ -72,8 +72,7 @@ public class CommandsMentionsCompleter implements TabCompleter {
                                 for (var sound : _sounds) {
                                     commandList.add(sound.name());
                                 }
-                            }
-                            catch (Exception ex) {
+                            } catch (Exception ex) {
                                 _logger.Error("Failed to retrieve sound events for tab completion.");
                                 _logger.Error(ex);
                             }

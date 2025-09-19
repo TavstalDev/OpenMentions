@@ -43,5 +43,19 @@ Commands:
     Usage: "%prefix% &aUsage: &e/mentions preference [value]"
     Invalid: "%prefix% &cThe &e%value%&c mention preference option is invalid."
     Set: "%prefix% &aYou have set the mention preference option to &e%value%&a."
+  Ignore:
+    Desc: "Ignores a player."
+    Syntax: " [player]"
+    Usage: "%prefix% &aUsage: &e/mentions ignore [player]"
+    Enabled: "%prefix% &aYou are now ignoring mentions from &e%player%&a."
+    AlreadyEnabled: "%prefix% &cYou are already ignoring mentions from &e%player%&c."
+    Self: "%prefix% &cYou cannot ignore mentions from yourself."
+  Unignore:
+    Desc: "Unignores a player."
+    Syntax: " [player]"
+    Usage: "%prefix% &aUsage: &e/mentions unignore [player]"
+    Disabled: "%prefix% &aYou are no longer ignoring mentions from &e%player%&a."
+    AlreadyDisabled: "%prefix% &cYou are not ignoring mentions from &e%player%&c."
+    Self: "%prefix% &cYou cannot unignore mentions from yourself."
 
 FileVersion: 1

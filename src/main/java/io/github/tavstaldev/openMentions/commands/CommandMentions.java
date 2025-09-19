@@ -5,12 +5,13 @@ import io.github.tavstaldev.minecorelib.core.PluginLogger;
 import io.github.tavstaldev.minecorelib.models.command.SubCommandData;
 import io.github.tavstaldev.minecorelib.utils.ChatUtils;
 import io.github.tavstaldev.openMentions.OpenMentions;
-import io.github.tavstaldev.openMentions.managers.PlayerCacheManager;
 import io.github.tavstaldev.openMentions.models.EMentionDisplay;
 import io.github.tavstaldev.openMentions.models.EMentionPreference;
 import io.github.tavstaldev.openMentions.utils.SoundUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -115,8 +116,6 @@ public class CommandMentions implements CommandExecutor {
                     var playerId = player.getUniqueId();
                     String soundName = sound.get().name();
                     OpenMentions.Database.updateSound(playerId, soundName);
-                    var cache = PlayerCacheManager.getPlayerData(playerId);
-                    cache.soundName = soundName;
                     OpenMentions.Instance.sendLocalizedMsg(player, "Commands.Sound.Set", Map.of(
                             "value", soundName
                     ));
@@ -138,8 +137,6 @@ public class CommandMentions implements CommandExecutor {
 
                     var playerId = player.getUniqueId();
                     OpenMentions.Database.updateDisplay(playerId, display);
-                    var cache = PlayerCacheManager.getPlayerData(playerId);
-                    cache.display = display;
                     OpenMentions.Instance.sendLocalizedMsg(player, "Commands.Display.Set", Map.of(
                             "value", display.toString()
                     ));
@@ -161,11 +158,71 @@ public class CommandMentions implements CommandExecutor {
 
                     var playerId = player.getUniqueId();
                     OpenMentions.Database.updatePreference(playerId, preference);
-                    var cache = PlayerCacheManager.getPlayerData(playerId);
-                    cache.preference = preference;
                     OpenMentions.Instance.sendLocalizedMsg(player, "Commands.Preference.Set", Map.of(
                             "value", preference.toString()
                     ));
+                    return true;
+                }
+                case "ignore": {
+                    if (args.length < 2) {
+                        OpenMentions.Instance.sendLocalizedMsg(player, "Commands.Ignore.Usage");
+                        return true;
+                    }
+
+                    OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+                    if (target == null || !target.hasPlayedBefore()) {
+                        OpenMentions.Instance.sendLocalizedMsg(player, "General.PlayerNotFound", Map.of("player", args[1]));
+                        return true;
+                    }
+
+                    var playerId = player.getUniqueId();
+                    var targetId = target.getUniqueId();
+
+                    if (playerId == targetId)
+                    {
+                        OpenMentions.Instance.sendLocalizedMsg(player, "Commands.Ignore.Self");
+                        return true;
+                    }
+
+                    if (OpenMentions.Database.isPlayerIgnored(playerId, targetId))
+                    {
+                        OpenMentions.Instance.sendLocalizedMsg(player, "Commands.Ignore.AlreadyEnabled", Map.of("player", args[1]));
+                        return true;
+                    }
+
+                    OpenMentions.Database.addIgnoredPlayer(playerId, targetId);
+                    OpenMentions.Instance.sendLocalizedMsg(player, "Commands.Ignore.Enabled", Map.of("player", args[1]));
+                    return true;
+                }
+                case "unignore": {
+                    if (args.length < 2) {
+                        OpenMentions.Instance.sendLocalizedMsg(player, "Commands.Unignore.Usage");
+                        return true;
+                    }
+
+                    OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+                    if (target == null || !target.hasPlayedBefore()) {
+                        OpenMentions.Instance.sendLocalizedMsg(player, "General.PlayerNotFound", Map.of("player", args[1]));
+                        return true;
+                    }
+
+                    var playerId = player.getUniqueId();
+                    var targetId = target.getUniqueId();
+
+                    if (playerId == targetId)
+                    {
+                        OpenMentions.Instance.sendLocalizedMsg(player, "Commands.Unignore.Self");
+                        return true;
+                    }
+
+                    if (!OpenMentions.Database.isPlayerIgnored(playerId, targetId))
+                    {
+                        OpenMentions.Instance.sendLocalizedMsg(player, "Commands.Unignore.AlreadyDisabled", Map.of("player", args[1]));
+                        return true;
+                    }
+
+                    OpenMentions.Database.removeIgnoredPlayer(playerId, targetId);
+                    OpenMentions.Instance.sendLocalizedMsg(player, "Commands.Unignore.Disabled", Map.of("player", args[1]));
                     return true;
                 }
             }
@@ -210,6 +267,16 @@ public class CommandMentions implements CommandExecutor {
             new SubCommandData("preference", "", Map.of(
                     "syntax", "Commands.Preference.Syntax",
                     "description", "Commands.Preference.Desc"
+            )),
+            // IGNORE
+            new SubCommandData("ignore", "", Map.of(
+                    "syntax", "Commands.Ignore.Syntax",
+                    "description", "Commands.Ignore.Desc"
+            )),
+            // UNIGNORE
+            new SubCommandData("unignore", "", Map.of(
+                    "syntax", "Commands.Unignore.Syntax",
+                    "description", "Commands.Unignore.Desc"
             ))
     );
 
