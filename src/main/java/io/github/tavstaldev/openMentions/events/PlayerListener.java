@@ -2,16 +2,13 @@ package io.github.tavstaldev.openMentions.events;
 
 import io.github.tavstaldev.minecorelib.core.PluginLogger;
 import io.github.tavstaldev.openMentions.OpenMentions;
-import io.github.tavstaldev.openMentions.managers.PlayerCacheManager;
 import io.github.tavstaldev.openMentions.models.EMentionDisplay;
 import io.github.tavstaldev.openMentions.models.EMentionPreference;
-import io.github.tavstaldev.openMentions.models.PlayerDatabaseData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 
 /**
  * Event listener class for handling player-related events in the OpenMentions plugin.
@@ -41,32 +38,12 @@ public class PlayerListener implements Listener {
         var config = OpenMentions.Config();
         Player player = event.getPlayer();
         var playerId = player.getUniqueId();
-        PlayerDatabaseData databaseData = OpenMentions.Database.getData(playerId);
-        if (databaseData == null) {
+        var playerOptData = OpenMentions.Database.getData(playerId);
+        if (playerOptData.isEmpty()) {
             var defaultSoundKey = config.defaultSound;
             var defaultDisplay = EMentionDisplay.valueOf(config.defaultDisplay);
             var defaultPreference = EMentionPreference.valueOf(config.defaultPreference);
-            databaseData = new PlayerDatabaseData(
-                    playerId,
-                    defaultSoundKey,
-                    defaultDisplay,
-                    defaultPreference
-            );
             OpenMentions.Database.addData(playerId, defaultSoundKey, defaultDisplay, defaultPreference);
         }
-
-        PlayerCacheManager.addPlayerData(playerId, databaseData);
-    }
-
-    /**
-     * Handles the PlayerQuitEvent.
-     * Removes the player's data from the PlayerCacheManager.
-     *
-     * @param event The PlayerQuitEvent triggered when a player leaves the server.
-     */
-    @EventHandler
-    public void onPlayerLeft(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        PlayerCacheManager.removePlayerData(player.getUniqueId());
     }
 }
