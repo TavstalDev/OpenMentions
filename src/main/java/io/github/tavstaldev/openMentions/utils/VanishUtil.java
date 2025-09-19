@@ -5,6 +5,7 @@ import org.bukkit.metadata.MetadataValue;
 
 import java.util.Optional;
 
+// TODO: Documentation
 public class VanishUtil {
     public static boolean isVanished(Player player) {
         Optional<MetadataValue> vanishedMeta = player.getMetadata("vanished").stream()

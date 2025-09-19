@@ -14,6 +14,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+// TODO: Documentation
 public class ChatListener implements Listener {
     private final PluginLogger _logger = OpenMentions.Logger().WithModule(ChatListener.class);
     private final Pattern minecraftUsernamePattern = Pattern.compile("@([a-zA-Z0-9_]{3,16}$)\\b");
@@ -52,7 +53,8 @@ public class ChatListener implements Listener {
             if (VanishUtil.isVanished(mentionedPlayer))
                 continue;
 
-            MentionUtils.mentionPlayer(mentionedPlayer, source);
+            if (!MentionUtils.mentionPlayer(mentionedPlayer, source))
+                continue;
             rawMessage = rawMessage.replaceFirst("@" + Pattern.quote(mentionName), "§e@" + mentionName + "§r");
             mentionCount++;
         }

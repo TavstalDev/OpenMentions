@@ -30,16 +30,20 @@ public class MentionUtils {
      */
     public static boolean mentionPlayer(@NotNull Player player, Player mentioner) {
         var playerId = player.getUniqueId();
-        var data = PlayerCacheManager.getPlayerData(playerId);
-        if (data == null) {
-            _logger.Error("Player cache not found for " + player.getName());
+        var dataOpt = OpenMentions.Database.getData(playerId);
+        if (dataOpt.isEmpty()) {
+            _logger.Error("Player data not found for " + player.getName());
             return false;
         }
 
         var mentionerId = mentioner.getUniqueId();
+        if (OpenMentions.Database.isPlayerIgnored(playerId, mentionerId))
+            return true; // Player has ignored the mentioner, return true so the mentioner will not know that they are ignored
+
         if (PlayerCacheManager.isOnCooldown(mentionerId))
             return false; // Do not notify
 
+        var data = dataOpt.get();
         switch (data.preference)
         {
             case ALWAYS: {

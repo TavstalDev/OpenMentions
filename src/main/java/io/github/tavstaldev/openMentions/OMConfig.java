@@ -12,11 +12,14 @@ public class OMConfig extends ConfigurationBase {
         super(OpenMentions.Instance, "config.yml", null);
     }
 
+    // General
     public boolean checkForUpdates, debug;
 
+    // Storage
     public String storageType, storageFilename, storageHost, storageDatabase, storageUsername, storagePassword, storageTablePrefix;
     public int storagePort;
 
+    // Settings
     public String defaultDisplay, defaultPreference, defaultSound;
     public double volume, pitch;
     public int mentionCooldown, maxMentionsPerMessage;
