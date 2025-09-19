@@ -3,6 +3,7 @@ package io.github.tavstaldev.openMentions.events;
 import io.github.tavstaldev.minecorelib.core.PluginLogger;
 import io.github.tavstaldev.openMentions.OpenMentions;
 import io.github.tavstaldev.openMentions.utils.MentionUtils;
+import io.github.tavstaldev.openMentions.utils.VanishUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,8 +11,12 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class ChatListener implements Listener {
     private final PluginLogger _logger = OpenMentions.Logger().WithModule(ChatListener.class);
+    private final Pattern minecraftUsernamePattern = Pattern.compile("@([a-zA-Z0-9_]{3,16}$)\\b");
 
     public ChatListener() {
         _logger.Debug("Registering chat event listener...");
@@ -21,49 +26,36 @@ public class ChatListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onChat(AsyncPlayerChatEvent event) {
+        if (event.isCancelled())
+            return;
+
         Player source = event.getPlayer();
         String rawMessage = event.getMessage();
 
-        boolean requirePrefix = OpenMentions.Config().requireSymbol;
         int mentionCount = 0;
         final int maxMentionCount = OpenMentions.Config().maxMentionsPerMessage;
+        final boolean allowSelfMention = OpenMentions.Config().allowSelfMention;
 
-        // Build regex pattern for mention prefixes
-        StringBuilder regexPattern = new StringBuilder();
-        boolean isFirst = true;
-        for (var prefix : OpenMentions.Config().symbols) {
-            if (!isFirst) {
-                regexPattern.append(String.format("|%s{player}", prefix));
-            } else {
-                isFirst = false;
-                regexPattern.append(String.format("%s{player}", prefix));
-            }
-        }
-        if (!requirePrefix) {
-            regexPattern.append("|{player}");
-        }
-
-        boolean allowSelfMention = OpenMentions.Config().allowSelfMention;
-
-        for (var onlinePlayer : Bukkit.getOnlinePlayers()) {
-            // Ignore the sender player to prevent self-mentions
-            if (!allowSelfMention && onlinePlayer.getUniqueId() == source.getUniqueId())
+        Matcher matcher = minecraftUsernamePattern.matcher(rawMessage);
+        while (matcher.find() && mentionCount < maxMentionCount) {
+            String mentionName = matcher.group(1);
+            Player mentionedPlayer = Bukkit.getPlayerExact(mentionName);
+            if (mentionedPlayer == null)
                 continue;
 
-            String onlinePlayerName = onlinePlayer.getName();
-            if (!rawMessage.contains(onlinePlayerName))
+            if (mentionedPlayer.getUniqueId() == source.getUniqueId() && !allowSelfMention)
                 continue;
 
-            String mentionPrefix = MentionUtils.getFormattedMention(onlinePlayer);
-            String localRegexPattern = regexPattern.toString().replace("{player}", onlinePlayerName);
-            rawMessage = rawMessage.replaceAll(localRegexPattern, mentionPrefix);
-            MentionUtils.mentionPlayer(onlinePlayer, source);
+            if (mentionedPlayer.getGameMode() == org.bukkit.GameMode.SPECTATOR)
+                continue;
+
+            if (VanishUtil.isVanished(mentionedPlayer))
+                continue;
+
+            MentionUtils.mentionPlayer(mentionedPlayer, source);
+            rawMessage = rawMessage.replaceFirst("@" + Pattern.quote(mentionName), "§e@" + mentionName + "§r");
             mentionCount++;
-            if (mentionCount >= maxMentionCount) {
-                _logger.Debug(String.format("Player %s has exceeded the maximum mention count (%d) in a single message.", source.getName(), maxMentionCount));
-                break;
-            }
         }
-        event.setMessage(rawMessage.replace("&", "§"));
+        event.setMessage(rawMessage);
     }
 }
