@@ -116,7 +116,7 @@ public class CommandMentions implements CommandExecutor {
                     String soundName = sound.get().name();
                     OpenMentions.Database.updateSound(playerId, soundName);
                     var cache = PlayerCacheManager.getPlayerData(playerId);
-                    cache.SoundName = soundName;
+                    cache.soundName = soundName;
                     OpenMentions.Instance.sendLocalizedMsg(player, "Commands.Sound.Set", Map.of(
                             "value", soundName
                     ));
@@ -139,7 +139,7 @@ public class CommandMentions implements CommandExecutor {
                     var playerId = player.getUniqueId();
                     OpenMentions.Database.updateDisplay(playerId, display);
                     var cache = PlayerCacheManager.getPlayerData(playerId);
-                    cache.Display = display;
+                    cache.display = display;
                     OpenMentions.Instance.sendLocalizedMsg(player, "Commands.Display.Set", Map.of(
                             "value", display.toString()
                     ));
@@ -162,7 +162,7 @@ public class CommandMentions implements CommandExecutor {
                     var playerId = player.getUniqueId();
                     OpenMentions.Database.updatePreference(playerId, preference);
                     var cache = PlayerCacheManager.getPlayerData(playerId);
-                    cache.Preference = preference;
+                    cache.preference = preference;
                     OpenMentions.Instance.sendLocalizedMsg(player, "Commands.Preference.Set", Map.of(
                             "value", preference.toString()
                     ));

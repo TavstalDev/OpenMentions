@@ -9,16 +9,16 @@ import java.util.UUID;
  */
 public class PlayerDatabaseData {
     /** The unique identifier of the player. */
-    public UUID PlayerId;
+    public UUID playerId;
 
     /** The name of the sound associated with the player's mention notifications. */
-    public String SoundName;
+    public String soundName;
 
     /** The display option for the player's mention notifications. */
-    public EMentionDisplay Display;
+    public EMentionDisplay display;
 
     /** The preference for receiving mention notifications. */
-    public EMentionPreference Preference;
+    public EMentionPreference preference;
 
     /**
      * Constructs a new PlayerDatabaseData instance with the specified parameters.
@@ -29,9 +29,9 @@ public class PlayerDatabaseData {
      * @param preference The preference for receiving mention notifications.
      */
     public PlayerDatabaseData(UUID playerId, String soundName, EMentionDisplay display, EMentionPreference preference) {
-        PlayerId = playerId;
-        SoundName = soundName;
-        Display = display;
-        Preference = preference;
+        this.playerId = playerId;
+        this.soundName = soundName;
+        this.display = display;
+        this.preference = preference;
     }
 }

@@ -40,20 +40,20 @@ public class MentionUtils {
         if (PlayerCacheManager.isOnCooldown(mentionerId))
             return; // Do not notify
 
-        switch (data.Preference)
+        switch (data.preference)
         {
             case ALWAYS: {
-                sendMention(player, data.SoundName, data.Display, false, mentioner);
+                sendMention(player, data.soundName, data.display, false, mentioner);
                 break;
             }
             case SILENT_IN_COMBAT: {
-                sendMention(player, data.SoundName, data.Display, OpenMentions.CombatManager.isPlayerInCombat(player), mentioner);
+                sendMention(player, data.soundName, data.display, OpenMentions.CombatManager.isPlayerInCombat(player), mentioner);
                 break;
             }
             case NEVER_IN_COMBAT: {
                 if (OpenMentions.CombatManager.isPlayerInCombat(player))
                     break; // Player is in combat, do not mention
-                sendMention(player, data.SoundName, data.Display, false, mentioner);
+                sendMention(player, data.soundName, data.display, false, mentioner);
                 break;
             }
             case NEVER: {
