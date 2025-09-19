@@ -5,7 +5,6 @@ import io.github.tavstaldev.minecorelib.config.ConfigurationBase;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
-import java.util.List;
 
 public class OMConfig extends ConfigurationBase {
 
@@ -22,11 +21,6 @@ public class OMConfig extends ConfigurationBase {
     public double volume, pitch;
     public int mentionCooldown, maxMentionsPerMessage;
     public boolean allowSelfMention;
-
-    public boolean requireSymbol;
-    public List<String> symbols;
-    public String defaultFormat;
-    public List<String> permissionBasedFormats;
 
     @Override
     protected void loadDefaults() {
@@ -60,15 +54,5 @@ public class OMConfig extends ConfigurationBase {
         mentionCooldown = resolveGet("settings.mentionCooldown", 3);
         maxMentionsPerMessage = resolveGet("settings.maxMentionsPerMessage", 3);
         allowSelfMention = resolveGet("settings.allowSelfMention", true);
-
-        // Formatting
-        requireSymbol = resolveGet("formatting.requireSymbol", false);
-        symbols = resolveGet("formatting.symbols", List.of("@", "!"));
-        defaultFormat = resolveGet("formatting.defaultFormat", "&e@%player%&r");
-        // Example permission based formats
-        permissionBasedFormats = resolveGet("formatting.permissionBasedFormats", List.of(
-            "group:admin;format:&c@%player%&r",
-            "group:vip;format:&d@%player%&r"
-        ));
     }
 }

@@ -4,7 +4,7 @@ version: '1.0.0'
 
 name: OpenMentions
 prefix: OpenMentions
-authors: [ Zoltan 'Tavstal' Solymosi ]
+authors: [ Tavstal ]
 description: Basic plugin to notify players about their mentions in chat.
 website: https://tavstaldev.github.io/
 softdepend: [CombatLogX]
