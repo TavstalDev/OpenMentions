@@ -28,17 +28,17 @@ public class MentionUtils {
      * @param player The player being mentioned.
      * @param mentioner The player who mentioned the target player.
      */
-    public static void mentionPlayer(@NotNull Player player, Player mentioner) {
+    public static boolean mentionPlayer(@NotNull Player player, Player mentioner) {
         var playerId = player.getUniqueId();
         var data = PlayerCacheManager.getPlayerData(playerId);
         if (data == null) {
             _logger.Error("Player cache not found for " + player.getName());
-            return;
+            return false;
         }
 
         var mentionerId = mentioner.getUniqueId();
         if (PlayerCacheManager.isOnCooldown(mentionerId))
-            return; // Do not notify
+            return false; // Do not notify
 
         switch (data.preference)
         {
@@ -64,9 +64,10 @@ public class MentionUtils {
 
         var cooldownTime = OpenMentions.Config().mentionCooldown;
         if (cooldownTime < 1)
-            return;
+            return true;
 
         PlayerCacheManager.setCooldown(mentionerId, LocalDateTime.now().plusSeconds(cooldownTime));
+        return true;
     }
 
     /**
