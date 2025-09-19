@@ -1,6 +1,6 @@
 package io.github.tavstaldev.openMentions.models;
 
-import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -76,25 +76,16 @@ public interface IDatabase {
     void removeData(UUID playerId);
 
     /**
-     * Checks if data exists for a specific player in the database.
-     *
-     * @param playerId The unique identifier of the player.
-     * @return True if the player's data exists, false otherwise.
-     */
-    boolean hasData(UUID playerId);
-
-    /**
-     * Retrieves all player data stored in the database.
-     *
-     * @return A list of all player data entries.
-     */
-    List<PlayerDatabaseData> getDatas();
-
-    /**
      * Retrieves the data for a specific player from the database.
      *
      * @param playerId The unique identifier of the player.
      * @return The player's data, or null if no data is found.
      */
-    PlayerDatabaseData getData(UUID playerId);
+    Optional<PlayerDatabaseData> getData(UUID playerId);
+
+    void addIgnoredPlayer(UUID playerId, UUID ignoredPlayerId);
+
+    void removeIgnoredPlayer(UUID playerId, UUID ignoredPlayerId);
+
+    boolean isPlayerIgnored(UUID playerId, UUID ignoredPlayerId);
 }
