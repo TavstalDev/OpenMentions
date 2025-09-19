@@ -39,14 +39,6 @@ repositories {
         url = uri("https://jitpack.io") // JitPack repository
     }
     maven {
-        name = "sonatype"
-        url = uri("https://oss.sonatype.org/content/groups/public/") // Sonatype repository
-    }
-    maven {
-        name = "CodeMC"
-        url = uri("https://repo.codemc.io/repository/maven-public/")
-    }
-    maven {
         name = "sirblobman-public" // CombatLogX
         url = uri("https://nexus.sirblobman.xyz/public/")
     }
