@@ -3,7 +3,6 @@ package io.github.tavstaldev.openMentions.utils;
 import com.cryptomorin.xseries.XSound;
 import io.github.tavstaldev.minecorelib.core.PluginLogger;
 import io.github.tavstaldev.minecorelib.utils.ChatUtils;
-import io.github.tavstaldev.minecorelib.utils.TypeUtils;
 import io.github.tavstaldev.openMentions.OpenMentions;
 import io.github.tavstaldev.openMentions.managers.PlayerCacheManager;
 import io.github.tavstaldev.openMentions.models.EMentionDisplay;
@@ -11,7 +10,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -22,44 +20,6 @@ import java.util.Optional;
 public class MentionUtils {
     /** Logger instance for logging messages related to MentionUtils. */
     private static final PluginLogger _logger = OpenMentions.Logger().WithModule(MentionUtils.class);
-
-    /**
-     * Retrieves the formatted mention string for a player.
-     * The format is determined by the player's permissions or the default format in the configuration.
-     *
-     * @param player The player for whom the mention format is retrieved.
-     * @return The formatted mention string.
-     */
-    public static String getFormattedMention(Player player) {
-        var config = OpenMentions.Config();
-        String format = config.getString("formatting.defaultFormat");
-        var permissionFormats = config.get("formatting.permissionBasedFormats");
-        if (permissionFormats != null) {
-            List<Map<String, String>> rawPermissionFormats = TypeUtils.castAsListOfMaps(permissionFormats, null);
-            if (rawPermissionFormats != null) {
-                for (var entry : rawPermissionFormats) {
-                    String permissionKey = entry.get("group");
-                    String permissionFormat = entry.get("format");
-                    if (player.hasPermission(String.format("openmentions.format.%s", permissionKey))) {
-                        format = permissionFormat;
-                        break; // Use the first matching permission format
-                    } else {
-                        _logger.Debug("Player " + player.getName() + " does not have permission for format: " + permissionKey);
-                    }
-                }
-            }
-            else
-                _logger.Warn("Permission formats in the config are not in the expected format. Expected a list of maps.");
-        }
-        else
-            _logger.Warn("No permission formats found in the config. Using default format.");
-
-        if (format == null || format.isEmpty()) {
-            _logger.Error("Default format is not set in the config. Please set 'formatting.defaultFormat' in the config.yml.");
-            return player.getName(); // Fallback to player name if format is not set
-        }
-        return format.replace("%player%", player.getName());
-    }
 
     /**
      * Handles the mention of a player by another player.
