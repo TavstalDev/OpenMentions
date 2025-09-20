@@ -121,8 +121,8 @@ public final class OpenMentions extends PluginBase {
                 break;
             }
         }
-        Database.checkSchema();
         Database.load();
+        Database.checkSchema();
 
         // Register Commands
         _logger.Debug("Registering commands...");
