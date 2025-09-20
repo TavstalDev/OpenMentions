@@ -36,7 +36,7 @@ It supports customizable notification formats, sounds, and preferences, making i
     - `/mentions sound <sound>` — Set your mention sound
     - `/mentions display <type>` — Set your mention display type
     - `/mentions preference <type>` — Set your mention preference
-    - `/mentions igonre <player>` — Ignore mentions from a player
+    - `/mentions ignore <player>` — Ignore mentions from a player
     - `/mentions unignore <player>` — Unignore mentions from a player
 
 Tab completion is supported for all subcommands and options.
