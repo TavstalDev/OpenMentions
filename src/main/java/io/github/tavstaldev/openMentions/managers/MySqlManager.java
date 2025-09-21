@@ -27,7 +27,9 @@ import java.util.concurrent.TimeUnit;
  * for the OpenMentions plugin. It uses HikariCP for connection pooling.
  */
 public class MySqlManager implements IDatabase {
-    /** HikariDataSource instance for managing database connections. */
+    /**
+     * HikariDataSource instance for managing database connections.
+     */
     private static HikariDataSource _dataSource;
     private final Cache<@NotNull UUID, PlayerDatabaseData> _playerCache = Caffeine.newBuilder()
             .maximumSize(1000)
@@ -41,7 +43,9 @@ public class MySqlManager implements IDatabase {
 
     private OMConfig _config;
 
-    /** Logger instance for logging messages related to MySqlManager. */
+    /**
+     * Logger instance for logging messages related to MySqlManager.
+     */
     private static final PluginLogger _logger = OpenMentions.Logger().WithModule(MySqlManager.class);
 
     /**
@@ -332,8 +336,12 @@ public class MySqlManager implements IDatabase {
         return Optional.ofNullable(data);
     }
 
-    // TODO: Documentation
-
+    /**
+     * Adds a player to the ignored list of another player in the database.
+     *
+     * @param playerId        The UUID of the player who is ignoring another player.
+     * @param ignoredPlayerId The UUID of the player being ignored.
+     */
     @Override
     public void addIgnoredPlayer(UUID playerId, UUID ignoredPlayerId) {
         try (Connection connection = _dataSource.getConnection()) {
@@ -349,8 +357,7 @@ public class MySqlManager implements IDatabase {
             Set<UUID> ignoredSet = _ignoredPlayerCache.getIfPresent(playerId);
             if (ignoredSet != null) {
                 ignoredSet.add(ignoredPlayerId);
-            }
-            else {
+            } else {
                 _ignoredPlayerCache.put(playerId, Set.of(ignoredPlayerId));
             }
         } catch (Exception ex) {
@@ -358,6 +365,12 @@ public class MySqlManager implements IDatabase {
         }
     }
 
+    /**
+     * Removes a player from the ignored list of another player in the database.
+     *
+     * @param playerId        The UUID of the player who is removing another player from their ignored list.
+     * @param ignoredPlayerId The UUID of the player being removed from the ignored list.
+     */
     @Override
     public void removeIgnoredPlayer(UUID playerId, UUID ignoredPlayerId) {
         try (Connection connection = _dataSource.getConnection()) {
@@ -378,6 +391,13 @@ public class MySqlManager implements IDatabase {
         }
     }
 
+    /**
+     * Checks if a player is ignored by another player.
+     *
+     * @param playerId        The UUID of the player who may be ignoring another player.
+     * @param ignoredPlayerId The UUID of the player who may be ignored.
+     * @return True if the ignoredPlayerId is in the ignored list of playerId, false otherwise.
+     */
     @Override
     public boolean isPlayerIgnored(UUID playerId, UUID ignoredPlayerId) {
         var data = _ignoredPlayerCache.getIfPresent(playerId);

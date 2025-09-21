@@ -36,7 +36,9 @@ public class SqlLiteManager implements IDatabase {
             .expireAfterWrite(5, TimeUnit.MINUTES)
             .build();
 
-    /** Logger instance for logging messages related to SqlLiteManager. */
+    /**
+     * Logger instance for logging messages related to SqlLiteManager.
+     */
     private static final PluginLogger _logger = OpenMentions.Logger().WithModule(SqlLiteManager.class);
 
     /**
@@ -51,7 +53,8 @@ public class SqlLiteManager implements IDatabase {
      * Unloads the database manager. No operation is performed for SQLite.
      */
     @Override
-    public void unload() {}
+    public void unload() {
+    }
 
     /**
      * Creates a connection to the SQLite database.
@@ -313,8 +316,12 @@ public class SqlLiteManager implements IDatabase {
         return Optional.ofNullable(data);
     }
 
-    // TODO: Documentation
-
+    /**
+     * Adds a player to the ignored list of another player in the database.
+     *
+     * @param playerId        The UUID of the player who is ignoring another player.
+     * @param ignoredPlayerId The UUID of the player being ignored.
+     */
     @Override
     public void addIgnoredPlayer(UUID playerId, UUID ignoredPlayerId) {
         try (Connection connection = CreateConnection()) {
@@ -330,8 +337,7 @@ public class SqlLiteManager implements IDatabase {
             Set<UUID> ignoredSet = _ignoredPlayerCache.getIfPresent(playerId);
             if (ignoredSet != null) {
                 ignoredSet.add(ignoredPlayerId);
-            }
-            else {
+            } else {
                 _ignoredPlayerCache.put(playerId, Set.of(ignoredPlayerId));
             }
         } catch (Exception ex) {
@@ -339,6 +345,12 @@ public class SqlLiteManager implements IDatabase {
         }
     }
 
+    /**
+     * Removes a player from the ignored list of another player in the database.
+     *
+     * @param playerId        The UUID of the player who is removing another player from their ignored list.
+     * @param ignoredPlayerId The UUID of the player being removed from the ignored list.
+     */
     @Override
     public void removeIgnoredPlayer(UUID playerId, UUID ignoredPlayerId) {
         try (Connection connection = CreateConnection()) {
@@ -359,6 +371,13 @@ public class SqlLiteManager implements IDatabase {
         }
     }
 
+    /**
+     * Checks if a player is ignored by another player.
+     *
+     * @param playerId        The UUID of the player who may be ignoring another player.
+     * @param ignoredPlayerId The UUID of the player who may be ignored.
+     * @return True if the ignoredPlayerId is in the ignored list of playerId, false otherwise.
+     */
     @Override
     public boolean isPlayerIgnored(UUID playerId, UUID ignoredPlayerId) {
         var data = _ignoredPlayerCache.getIfPresent(playerId);
