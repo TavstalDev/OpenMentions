@@ -14,6 +14,7 @@ import io.github.tavstaldev.openMentions.managers.MySqlManager;
 import io.github.tavstaldev.openMentions.managers.SqlLiteManager;
 import io.github.tavstaldev.openMentions.models.ICombatManager;
 import io.github.tavstaldev.openMentions.models.IDatabase;
+import io.github.tavstaldev.openMentions.tasks.CacheCleanTask;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
@@ -57,6 +58,7 @@ public final class OpenMentions extends PluginBase {
 
     /** Combat manager for handling combat-related features. */
     public static ICombatManager CombatManager;
+    private CacheCleanTask cacheCleanTask; // Task for cleaning player caches.
 
     /**
      * Constructor for the OpenMentions plugin.
@@ -131,6 +133,12 @@ public final class OpenMentions extends PluginBase {
             command.setExecutor(new CommandMentions());
             command.setTabCompleter(new CommandsMentionsCompleter());
         }
+
+        // Register cache cleanup task.
+        if (cacheCleanTask != null && !cacheCleanTask.isCancelled())
+            cacheCleanTask.cancel();
+        cacheCleanTask = new CacheCleanTask(); // Runs every 5 minutes
+        cacheCleanTask.runTaskTimer(this, 0, 5 * 60 * 20);
 
         _logger.Ok(String.format("%s has been successfully loaded.", getProjectName()));
         if (Config().checkForUpdates) {

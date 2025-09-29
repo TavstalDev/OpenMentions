@@ -2,6 +2,7 @@ package io.github.tavstaldev.openMentions.events;
 
 import io.github.tavstaldev.minecorelib.core.PluginLogger;
 import io.github.tavstaldev.openMentions.OpenMentions;
+import io.github.tavstaldev.openMentions.managers.PlayerCacheManager;
 import io.github.tavstaldev.openMentions.models.EMentionDisplay;
 import io.github.tavstaldev.openMentions.models.EMentionPreference;
 import org.bukkit.Bukkit;
@@ -9,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 /**
  * Event listener class for handling player-related events in the OpenMentions plugin.
@@ -45,5 +47,12 @@ public class PlayerListener implements Listener {
             var defaultPreference = EMentionPreference.valueOf(config.defaultPreference);
             OpenMentions.Database.addData(playerId, defaultSoundKey, defaultDisplay, defaultPreference);
         }
+        if (PlayerCacheManager.isMarkedForRemoval(playerId))
+            PlayerCacheManager.unmarkForRemoval(playerId);
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        PlayerCacheManager.markForRemoval(event.getPlayer().getUniqueId());
     }
 }
