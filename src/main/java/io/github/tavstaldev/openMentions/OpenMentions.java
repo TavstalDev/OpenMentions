@@ -161,6 +161,8 @@ public final class OpenMentions extends PluginBase {
      */
     @Override
     public void onDisable() {
+        if (cacheCleanTask != null && !cacheCleanTask.isCancelled())
+            cacheCleanTask.cancel();
         _logger.Info(String.format("%s has been successfully unloaded.", getProjectName()));
     }
 
