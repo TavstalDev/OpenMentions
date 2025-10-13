@@ -10,7 +10,6 @@ plugins {
 // Define project properties for versions and package name
 val javaVersion: String by project
 val paperApiVersion: String by project
-val snakeYamlVersion: String by project
 val hikariCpVersion: String by project
 val mineCoreLibVersion: String by project
 val xseriesVersion: String by project
@@ -35,9 +34,7 @@ repositories {
         name = "papermc"
         url = uri("https://repo.papermc.io/repository/maven-public/")
     }
-    maven {
-        url = uri("https://jitpack.io") // JitPack repository
-    }
+    maven { url = uri("https://jitpack.io") }
     maven {
         name = "sirblobman-public" // CombatLogX
         url = uri("https://nexus.sirblobman.xyz/public/")
